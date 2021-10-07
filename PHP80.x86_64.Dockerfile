@@ -1,7 +1,4 @@
-# Possible values are [al2-x86_64 | al2-arm64]
-ARG BASE_IMAGE
-
-FROM public.ecr.aws/lambda/provided:${BASE_IMAGE}
+FROM public.ecr.aws/lambda/provided:al2-x86_64
 
 RUN yum install -y \
         https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \

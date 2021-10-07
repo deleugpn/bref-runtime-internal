@@ -1,6 +1,6 @@
 set -xe
 
-docker build --build-arg BASE_IMAGE=al2-x86_64 -f PHP80.Dockerfile . -t bref-runtime/php-80
+docker build -f PHP80.arm64.Dockerfile . -t bref-runtime/php-80
 
 CONTAINER_NAME=php80-extractor
 
@@ -16,10 +16,10 @@ docker rm --force ${CONTAINER_NAME} || true
 docker run -it -d --name ${CONTAINER_NAME} bref-runtime/php-80 /bin/bash
 
 # Binary
-docker exec ${CONTAINER_NAME} /bin/cat /opt/remi/php80/root/usr/bin/php > ./dist/php80/bin/php
+docker exec ${CONTAINER_NAME} /bin/cat /usr/bin/php > ./dist/php80/bin/php
 
 # Modules
-docker exec ${CONTAINER_NAME} /bin/cat /opt/remi/php80/root/lib64/php/modules/curl.so > ./dist/php80/php-modules/curl.so
+docker exec ${CONTAINER_NAME} /bin/cat /usr/lib64/php/modules/curl.so > ./dist/php80/php-modules/curl.so
 
 # Bref
 docker exec ${CONTAINER_NAME} /bin/cat /opt/bref-runtime/vendor/deleugpn/bref-runtime-experiment/bootstrap/bootstrap > ./dist/php80/bootstrap
@@ -30,8 +30,8 @@ docker cp ${CONTAINER_NAME}:/opt/bref-runtime ./dist/php80/bref-runtime
 # Shared Libraries
 docker exec ${CONTAINER_NAME} /bin/cat /lib64/libcrypt.so.1 > ./dist/php80/lib/libcrypt.so.1
 docker exec ${CONTAINER_NAME} /bin/cat /lib64/libresolv.so.2 > ./dist/php80/lib/libresolv.so.2
-docker exec ${CONTAINER_NAME} /bin/cat /lib64/libncurses.so.5 > ./dist/php80/lib/libncurses.so.5
-docker exec ${CONTAINER_NAME} /bin/cat /lib64/libtinfo.so.5 > ./dist/php80/lib/libtinfo.so.5
+docker exec ${CONTAINER_NAME} /bin/cat /lib64/libncurses.so.6 > ./dist/php80/lib/libncurses.so.5
+docker exec ${CONTAINER_NAME} /bin/cat /lib64/libtinfo.so.6 > ./dist/php80/lib/libtinfo.so.5
 docker exec ${CONTAINER_NAME} /bin/cat /lib64/librt.so.1 > ./dist/php80/lib/librt.so.1
 docker exec ${CONTAINER_NAME} /bin/cat /lib64/libstdc++.so.6 > ./dist/php80/lib/libstdc++.so.6
 docker exec ${CONTAINER_NAME} /bin/cat /lib64/libutil.so.1 > ./dist/php80/lib/libutil.so.1
@@ -48,7 +48,7 @@ docker exec ${CONTAINER_NAME} /bin/cat /lib64/libz.so.1 > ./dist/php80/lib/libz.
 docker exec ${CONTAINER_NAME} /bin/cat /lib64/libedit.so.0 > ./dist/php80/lib/libedit.so.0
 docker exec ${CONTAINER_NAME} /bin/cat /lib64/libc.so.6 > ./dist/php80/lib/libc.so.6
 docker exec ${CONTAINER_NAME} /bin/cat /lib64/libpthread.so.0 > ./dist/php80/lib/libpthread.so.0
-docker exec ${CONTAINER_NAME} /bin/cat /lib64/ld-linux-x86-64.so.2 > ./dist/php80/lib/ld-linux-x86-64.so.2
+docker exec ${CONTAINER_NAME} /bin/cat /lib64/ld-linux-aarch64.so.1 > ./dist/php80/lib/ld-linux-x86-64.so.2
 docker exec ${CONTAINER_NAME} /bin/cat /lib64/libgcc_s.so.1 > ./dist/php80/lib/libgcc_s.so.1
 docker exec ${CONTAINER_NAME} /bin/cat /lib64/liblzma.so.5 > ./dist/php80/lib/liblzma.so.5
 docker exec ${CONTAINER_NAME} /bin/cat /lib64/libkrb5support.so.0 > ./dist/php80/lib/libkrb5support.so.0
@@ -75,4 +75,3 @@ docker exec ${CONTAINER_NAME} /bin/cat /lib64/libplc4.so > ./dist/php80/lib/libp
 docker exec ${CONTAINER_NAME} /bin/cat /lib64/libnspr4.so > ./dist/php80/lib/libnspr4.so
 
 cd dist/php80 && zip -r php80.zip .
-
